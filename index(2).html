@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mi Rutina 🍑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#080808;color:#E8E8E8;font-family:'DM Sans',sans-serif;min-height:100vh;}
+  ::-webkit-scrollbar{display:none;}
+  .app{max-width:480px;margin:0 auto;padding-bottom:48px;}
+
+  /* Header */
+  .header{padding:24px 20px 0;border-bottom:1px solid #1A1A1A;}
+  .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+  .header-title{font-family:'Bebas Neue',cursive;font-size:32px;letter-spacing:2px;color:#fff;line-height:1;}
+  .header-sub{font-size:11px;color:#555;letter-spacing:1px;margin-top:3px;}
+  .week-count{font-family:'Bebas Neue',cursive;font-size:30px;color:#FF6B9D;line-height:1;}
+  .week-label{font-size:10px;color:#555;letter-spacing:1px;}
+  .week-bar{height:3px;background:#1A1A1A;border-radius:2px;margin-bottom:14px;overflow:hidden;}
+  .week-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#FF6B9D,#C77DFF);transition:width .5s ease;}
+
+  /* Day tabs */
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;}
+  .tab{border-radius:10px;padding:8px 12px;cursor:pointer;min-width:52px;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.5px;transition:all .2s;flex-shrink:0;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .tab-emoji{font-size:14px;}
+  .tab-day{font-weight:600;}
+  .tab-mini-bar{height:2px;width:100%;border-radius:1px;overflow:hidden;background:#222;margin-top:2px;}
+  .tab-mini-fill{height:100%;border-radius:1px;transition:width .3s;}
+
+  /* Content */
+  .content{padding:18px 16px;}
+
+  /* Day card */
+  .day-card{border-radius:16px;padding:18px 20px;margin-bottom:16px;}
+  .day-card-top{display:flex;justify-content:space-between;align-items:center;}
+  .day-label{font-size:10px;letter-spacing:2px;font-weight:600;}
+  .day-title{font-family:'Bebas Neue',cursive;font-size:30px;letter-spacing:1.5px;color:#fff;margin-top:3px;line-height:1.1;}
+  .day-emoji-big{font-size:40px;}
+  .prog-row{display:flex;justify-content:space-between;margin-top:14px;margin-bottom:6px;}
+  .prog-label{font-size:11px;color:#888;}
+  .prog-count{font-size:11px;font-weight:600;}
+  .prog-bar{height:6px;background:#0D0D0D;border-radius:3px;overflow:hidden;}
+  .prog-fill{height:100%;border-radius:3px;transition:width .4s ease;}
+  .day-note{font-size:11px;color:#666;font-style:italic;margin-top:10px;}
+
+  /* Rest day */
+  .rest-card{background:#0E0E0E;border:1px solid #1E1E1E;border-radius:14px;padding:32px;text-align:center;}
+  .rest-emoji{font-size:56px;margin-bottom:12px;}
+  .rest-title{font-family:'Bebas Neue',cursive;font-size:24px;color:#444;letter-spacing:2px;}
+  .rest-sub{font-size:13px;color:#555;margin-top:8px;}
+  .rest-note{font-size:11px;color:#333;margin-top:6px;}
+
+  /* Section */
+  .section{margin-bottom:20px;}
+  .section-label{font-size:10px;letter-spacing:2px;font-weight:600;margin-bottom:10px;padding-left:2px;}
+
+  /* Exercise card */
+  .ex-card{background:#0E0E0E;border-radius:12px;padding:14px 16px;margin-bottom:8px;border:1px solid #1A1A1A;transition:all .3s;}
+  .ex-card.done{border-color:var(--accent-t);}
+  .ex-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+  .ex-name{font-size:14px;font-weight:600;color:#E0E0E0;transition:all .3s;}
+  .ex-name.done{text-decoration:line-through;}
+  .ex-sets{font-size:11px;color:#555;margin-top:2px;}
+  .kg-input{background:#161616;border:1px solid #2A2A2A;border-radius:8px;color:var(--accent);font-size:12px;font-weight:600;width:46px;padding:5px 8px;text-align:center;outline:none;font-family:'DM Sans',sans-serif;}
+  .kg-input:focus{border-color:var(--accent);}
+
+  /* Set buttons */
+  .sets-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .set-btn{width:38px;height:38px;border-radius:10px;border:2px solid #2A2A2A;background:transparent;color:#444;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .set-btn.done{color:#000;font-size:16px;}
+  .set-btn.flash{transform:scale(1.35);}
+
+  /* Reset btn */
+  .reset-btn{background:transparent;border:1px solid #2A2A2A;color:#444;border-radius:10px;padding:10px 16px;font-size:11px;cursor:pointer;width:100%;margin-top:4px;font-family:'DM Sans',sans-serif;letter-spacing:.5px;}
+  .reset-btn:hover{color:#666;border-color:#444;}
+
+  /* Footer keys */
+  .keys{margin:0 16px;background:#0A0A0A;border:1px solid #141414;border-radius:14px;padding:16px;}
+  .keys-title{font-size:10px;color:#333;letter-spacing:2px;margin-bottom:10px;}
+  .key-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #111;}
+  .key-emoji{font-size:16px;}
+  .key-text{font-size:12px;color:#666;}
+  .key-line{flex:1;height:1px;}
+  .keys-note{font-size:10px;color:#333;margin-top:10px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-title">MI RUTINA</div>
+        <div class="header-sub">RECOMPOSICIÓN CORPORAL 🍑</div>
+      </div>
+      <div style="text-align:right">
+        <div class="week-count" id="weekCount">0/6</div>
+        <div class="week-label">ESTA SEMANA</div>
+      </div>
+    </div>
+    <div class="week-bar"><div class="week-bar-fill" id="weekBarFill" style="width:0%"></div></div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+  <div class="content" id="content"></div>
+  <div class="keys">
+    <div class="keys-title">CLAVES DE LA SEMANA</div>
+    <div class="key-row"><span class="key-emoji">🍑</span><span class="key-text">Glúteo 3× semana</span><div class="key-line" style="background:rgba(255,107,157,.2)"></div></div>
+    <div class="key-row"><span class="key-emoji">🔥</span><span class="key-text">Cardio 1–2×</span><div class="key-line" style="background:rgba(255,140,66,.2)"></div></div>
+    <div class="key-row"><span class="key-emoji">💪</span><span class="key-text">Espalda 1×</span><div class="key-line" style="background:rgba(78,205,196,.2)"></div></div>
+    <div class="key-row"><span class="key-emoji">😌</span><span class="key-text">Descanso = progreso</span><div class="key-line" style="background:rgba(168,197,218,.2)"></div></div>
+    <div class="keys-note">Primera semana → menos peso · sin fallo muscular 💡</div>
+  </div>
+</div>
+
+<script>
+const ROUTINE = [
+  {
+    id:1, day:"LUN", emoji:"🍑", label:"DÍA 1", title:"Glúteo Fuerte",
+    accent:"#FF6B9D", bg:"rgba(255,107,157,0.08)",
+    note:"Descanso entre series: 60–90 seg",
+    sections:[
+      {name:"Activación", exercises:[
+        {id:"d1e1", name:"Abducción", sets:3, reps:"20 reps"}
+      ]},
+      {name:"Entrenamiento", exercises:[
+        {id:"d1e2", name:"Hip Thrust", sets:3, reps:"10 reps"},
+        {id:"d1e3", name:"Sentadilla", sets:3, reps:"10 reps"},
+        {id:"d1e4", name:"Peso muerto rumano", sets:3, reps:"10 reps"},
+        {id:"d1e5", name:"Patada de glúteo", sets:2, reps:"12 reps"},
+        {id:"d1e6", name:"Abducción", sets:2, reps:"20 reps"}
+      ]}
+    ]
+  },
+  {
+    id:2, day:"MAR", emoji:"🔥", label:"DÍA 2", title:"Cardio + Core",
+    accent:"#FF8C42", bg:"rgba(255,140,66,0.08)",
+    sections:[
+      {name:"Cardio", exercises:[
+        {id:"d2e1", name:"Caminadora", sets:1, reps:"25–30 min"},
+        {id:"d2e2", name:"Bicicleta", sets:1, reps:"10–15 min"}
+      ]},
+      {name:"Core", exercises:[
+        {id:"d2e3", name:"Plancha", sets:3, reps:"40 seg"},
+        {id:"d2e4", name:"Crunch", sets:3, reps:"20 reps"},
+        {id:"d2e5", name:"Elevaciones de piernas", sets:3, reps:"15 reps"}
+      ]}
+    ]
+  },
+  {
+    id:3, day:"MIÉ", emoji:"💪", label:"DÍA 3", title:"Espalda + Core",
+    accent:"#4ECDC4", bg:"rgba(78,205,196,0.08)",
+    sections:[
+      {name:"Espalda", exercises:[
+        {id:"d3e1", name:"Jalón al pecho", sets:3, reps:"12 reps"},
+        {id:"d3e2", name:"Remo en máquina", sets:3, reps:"12 reps"},
+        {id:"d3e3", name:"Remo con mancuerna", sets:3, reps:"10 reps"},
+        {id:"d3e4", name:"Face pull", sets:3, reps:"15 reps"}
+      ]},
+      {name:"Core", exercises:[
+        {id:"d3e5", name:"Plancha", sets:3, reps:"40 seg"},
+        {id:"d3e6", name:"Russian twist", sets:3, reps:"20 reps"}
+      ]}
+    ]
+  },
+  {
+    id:4, day:"JUE", emoji:"😌", label:"DÍA 4", title:"Descanso",
+    accent:"#A8C5DA", bg:"rgba(168,197,218,0.06)",
+    isRest:true,
+    sections:[
+      {name:"Opcional", exercises:[
+        {id:"d4e1", name:"Caminata", sets:1, reps:"20–30 min"},
+        {id:"d4e2", name:"Estiramientos", sets:1, reps:"15 min"}
+      ]}
+    ]
+  },
+  {
+    id:5, day:"VIE", emoji:"🍑", label:"DÍA 5", title:"Glúteo + Pierna",
+    accent:"#FF6B9D", bg:"rgba(255,107,157,0.08)",
+    sections:[
+      {name:"Activación", exercises:[
+        {id:"d5e1", name:"Abducción", sets:3, reps:"20 reps"}
+      ]},
+      {name:"Entrenamiento", exercises:[
+        {id:"d5e2", name:"Hip Thrust", sets:4, reps:"10 reps"},
+        {id:"d5e3", name:"Prensa", sets:3, reps:"12 reps"},
+        {id:"d5e4", name:"Desplantes", sets:3, reps:"10 × pierna"},
+        {id:"d5e5", name:"Patada de glúteo", sets:3, reps:"15 reps"},
+        {id:"d5e6", name:"Abducción", sets:3, reps:"20 reps"}
+      ]}
+    ]
+  },
+  {
+    id:6, day:"SÁB", emoji:"🍑", label:"DÍA 6", title:"Glúteo Forma",
+    accent:"#C77DFF", bg:"rgba(199,125,255,0.08)",
+    note:"Más ligero — enfócate en la técnica",
+    sections:[
+      {name:"Ligero & Controlado", exercises:[
+        {id:"d6e1", name:"Sentadilla sumo", sets:3, reps:"12 reps"},
+        {id:"d6e2", name:"Peso muerto", sets:3, reps:"12 reps"},
+        {id:"d6e3", name:"Step ups", sets:3, reps:"10 × pierna"},
+        {id:"d6e4", name:"Patada de glúteo", sets:3, reps:"15 reps"},
+        {id:"d6e5", name:"Abducción", sets:3, reps:"20 reps"}
+      ]}
+    ]
+  },
+  {
+    id:7, day:"DOM", emoji:"😴", label:"DÍA 7", title:"Descanso Total",
+    accent:"#555", bg:"rgba(108,117,125,0.06)",
+    isFullRest:true, sections:[]
+  }
+];
+
+let activeDay = 0;
+let completed = {};
+let weights = {};
+
+function save(){
+  try{
+    localStorage.setItem("rz-completed", JSON.stringify(completed));
+    localStorage.setItem("rz-weights", JSON.stringify(weights));
+  }catch(e){}
+}
+
+function load(){
+  try{
+    const c = localStorage.getItem("rz-completed");
+    const w = localStorage.getItem("rz-weights");
+    if(c) completed = JSON.parse(c);
+    if(w) weights = JSON.parse(w);
+  }catch(e){}
+}
+
+function dayProgress(day){
+  if(day.isFullRest) return null;
+  let total=0, done=0;
+  day.sections.forEach(s=>s.exercises.forEach(e=>{
+    for(let i=0;i<e.sets;i++){total++;if(completed[`${e.id}-${i}`])done++;}
+  }));
+  return total?{total,done,pct:Math.round(done/total*100)}:null;
+}
+
+function weekDoneCount(){
+  return ROUTINE.filter(d=>{
+    if(d.isFullRest||d.isRest) return false;
+    const p=dayProgress(d); return p&&p.pct===100;
+  }).length;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  ROUTINE.forEach((d,i)=>{
+    const p = dayProgress(d);
+    const isDone = p&&p.pct===100;
+    const isActive = i===activeDay;
+    const btn = document.createElement("button");
+    btn.className = "tab";
+    btn.style.background = isActive ? d.accent : isDone ? "rgba(255,255,255,.05)" : "#111";
+    btn.style.color = isActive ? "#000" : isDone ? d.accent : "#666";
+    btn.style.fontWeight = isActive ? "700" : "500";
+    btn.style.border = isActive ? "none" : `1px solid ${isDone?d.accent+"40":"#1E1E1E"}`;
+    btn.innerHTML = `<span class="tab-emoji">${d.emoji}</span><span class="tab-day">${d.day}</span>`;
+    if(p&&!d.isFullRest){
+      const bar = document.createElement("div");
+      bar.className="tab-mini-bar";
+      const fill = document.createElement("div");
+      fill.className="tab-mini-fill";
+      fill.style.width = p.pct+"%";
+      fill.style.background = isActive?"rgba(0,0,0,.4)":d.accent;
+      bar.appendChild(fill);
+      btn.appendChild(bar);
+    }
+    btn.onclick = ()=>{ activeDay=i; render(); };
+    tabs.appendChild(btn);
+  });
+}
+
+function renderContent(){
+  const content = document.getElementById("content");
+  const cur = ROUTINE[activeDay];
+  const prog = dayProgress(cur);
+  let html = "";
+
+  // Day header card
+  html += `<div class="day-card" style="background:${cur.bg};border:1px solid ${cur.accent}25;">
+    <div class="day-card-top">
+      <div>
+        <div class="day-label" style="color:${cur.accent}">${cur.label}</div>
+        <div class="day-title">${cur.title}</div>
+      </div>
+      <div class="day-emoji-big">${cur.emoji}</div>
+    </div>`;
+
+  if(prog){
+    html += `<div class="prog-row">
+      <span class="prog-label">Progreso del día</span>
+      <span class="prog-count" style="color:${cur.accent}">${prog.done}/${prog.total} series${prog.pct===100?" ✅":""}</span>
+    </div>
+    <div class="prog-bar">
+      <div class="prog-fill" style="width:${prog.pct}%;background:${cur.accent};box-shadow:0 0 8px ${cur.accent}80;"></div>
+    </div>`;
+  }
+  if(cur.note) html+=`<div class="day-note">⏱ ${cur.note}</div>`;
+  html += `</div>`;
+
+  // Full rest
+  if(cur.isFullRest){
+    html += `<div class="rest-card">
+      <div class="rest-emoji">😴</div>
+      <div class="rest-title">HOY DESCANSAS</div>
+      <div class="rest-sub">Nada de pesas. Solo relajarte.</div>
+      <div class="rest-note">El descanso también es parte del entrenamiento 💆‍♀️</div>
+    </div>`;
+    content.innerHTML = html; return;
+  }
+
+  // Sections
+  let anyDone = false;
+  cur.sections.forEach(sec=>{
+    html += `<div class="section">
+      <div class="section-label" style="color:${cur.accent}">▸ ${sec.name.toUpperCase()}</div>`;
+    sec.exercises.forEach(ex=>{
+      const allDone = Array.from({length:ex.sets},(_,i)=>completed[`${ex.id}-${i}`]).every(Boolean);
+      if(allDone) anyDone=true;
+      html += `<div class="ex-card${allDone?" done":""}" id="ex-${ex.id}" 
+        style="${allDone?"background:"+cur.accent+"10;border-color:"+cur.accent+"40;":""}">
+        <div class="ex-top">
+          <div style="flex:1">
+            <div class="ex-name${allDone?" done":""}" style="${allDone?"color:"+cur.accent+";":""}">
+              ${ex.name}
+            </div>
+            <div class="ex-sets">${ex.sets} series × ${ex.reps}</div>
+          </div>`;
+      if(!cur.isRest){
+        html+=`<input class="kg-input" type="text" placeholder="kg" 
+          data-exid="${ex.id}" value="${weights[ex.id]||''}"
+          style="--accent:${cur.accent}" oninput="onWeightChange(this)"/>`;
+      }
+      html += `</div><div class="sets-row">`;
+      for(let i=0;i<ex.sets;i++){
+        const key=`${ex.id}-${i}`;
+        const done=!!completed[key];
+        html += `<button class="set-btn${done?" done":""}" 
+          id="btn-${key}"
+          data-exid="${ex.id}" data-setidx="${i}"
+          style="${done?"background:"+cur.accent+";border-color:"+cur.accent+";box-shadow:0 0 12px "+cur.accent+"60;":""}"
+          onclick="onSetClick('${ex.id}',${i},'${cur.accent}')">
+          ${done?"✓":i+1}
+        </button>`;
+      }
+      html += `</div></div>`;
+    });
+    html += `</div>`;
+  });
+
+  if(prog&&prog.done>0){
+    html += `<button class="reset-btn" onclick="resetDay(${activeDay})">↺ Reiniciar día</button>`;
+  }
+
+  content.innerHTML = html;
+}
+
+function onWeightChange(input){
+  const exid = input.dataset.exid;
+  weights[exid] = input.value;
+  save();
+}
+
+function onSetClick(exId, setIdx, accent){
+  const key = `${exId}-${setIdx}`;
+  completed[key] = !completed[key];
+  save();
+
+  // Flash
+  const btn = document.getElementById(`btn-${key}`);
+  if(btn){
+    btn.classList.add("flash");
+    setTimeout(()=>btn.classList.remove("flash"),350);
+  }
+  renderAll();
+}
+
+function resetDay(dayIdx){
+  const day = ROUTINE[dayIdx];
+  day.sections.forEach(s=>s.exercises.forEach(e=>{
+    for(let i=0;i<e.sets;i++) delete completed[`${e.id}-${i}`];
+  }));
+  save();
+  renderAll();
+}
+
+function renderWeekHeader(){
+  const done = weekDoneCount();
+  document.getElementById("weekCount").textContent = `${done}/6`;
+  document.getElementById("weekBarFill").style.width = `${(done/6)*100}%`;
+}
+
+function renderAll(){
+  renderWeekHeader();
+  renderTabs();
+  renderContent();
+}
+
+load();
+renderAll();
+</script>
+</body>
+</html>
