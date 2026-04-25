@@ -301,27 +301,35 @@ const DAILY_HABITS = [
 
 const MENU = {
   desayunos:[
-    "Avena + yogur + fruta",
-    "2 huevos + 2 claras + aguacate + tortillas",
-    "Yogur + avena + fresas",
-    "Pan integral + huevo + aguacate",
+    "Yogur + cereal integral + plátano + semillas",
+    "Pan tostado + huevo + aguacate",
+    "Huevos con verduras",
+    "Yogur + melón + semillas",
   ],
   comidas:[
-    "Pollo + arroz + verduras",
-    "Atún + arroz + ensalada",
-    "Pollo + camote + verduras",
-    "Pollo + ensalada + aguacate",
+    "Pollo + arroz + verduras + aguacate",
+    "Ensalada: lechuga + jitomate + atún/pollo + aguacate + semillas",
+    "Pasta + pollo o atún + verduras",
+    "Tostadas horneadas + atún/pollo + verduras + aguacate",
   ],
   cenas:[
-    "Huevos + tortillas + aguacate",
-    "Queso panela + ensalada",
-    "Atún + verduras",
-    "Huevos + espinaca",
+    "Ensalada + queso panela o huevo",
+    "Huevos + verduras",
+    "Atún + verduras + aguacate",
   ],
   snacks:[
     "Yogur + almendras",
-    "Manzana + crema de cacahuate",
-    "Fruta + nueces",
+    "Melón",
+    "Almendras o semillas",
+    "Fruta + semillas",
+  ],
+  extras:[
+    "Gelatina light 🍮",
+  ],
+  bebidas:[
+    "Agua 💧",
+    "Café ☕",
+    "Té 🍵",
   ],
 };
 
@@ -577,7 +585,7 @@ function renderMenu(){
 
   // Snacks
   html+=`<div class="meal-section">
-    <div class="meal-section-title" style="color:var(--orange)">🥜 SNACKS</div>
+    <div class="meal-section-title" style="color:var(--orange)">🥜 SNACK — elige 1</div>
     <div class="snack-chips">`;
   MENU.snacks.forEach((s,i)=>{
     const sk = `${mk}-s${i}`;
@@ -585,6 +593,34 @@ function renderMenu(){
     html+=`<div class="snack-chip${chosen?" chosen":""}" onclick="onSnack('${sk}')">${s}</div>`;
   });
   html+=`</div></div>`;
+
+  // Extras
+  html+=`<div class="meal-section">
+    <div class="meal-section-title" style="color:var(--teal)">🍮 EXTRA — antojo sin culpa</div>
+    <div class="snack-chips">`;
+  MENU.extras.forEach((s,i)=>{
+    const ek = `${mk}-ex${i}`;
+    const chosen = !!S.menuChoices[ek];
+    html+=`<div class="snack-chip${chosen?" chosen":""}" style="${chosen?"border-color:var(--teal);color:var(--teal);background:color-mix(in srgb,var(--teal) 8%,transparent)":""}" onclick="onSnack('${ek}')">${s}</div>`;
+  });
+  html+=`</div></div>`;
+
+  // Bebidas
+  html+=`<div class="meal-section">
+    <div class="meal-section-title" style="color:var(--blue)">☕ BEBIDAS — sin azúcar</div>
+    <div class="snack-chips">`;
+  MENU.bebidas.forEach((s,i)=>{
+    const bk = `${mk}-b${i}`;
+    const chosen = !!S.menuChoices[bk];
+    html+=`<div class="snack-chip${chosen?" chosen":""}" style="${chosen?"border-color:var(--blue);color:var(--blue);background:color-mix(in srgb,var(--blue) 8%,transparent)":""}" onclick="onSnack('${bk}')">${s}</div>`;
+  });
+  html+=`</div></div>`;
+
+  // Reglas
+  html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);margin-bottom:10px;">⚖️ REGLAS QUE NO FALLAN</div>
+    ${[["🍗","Proteína en cada comida"],["🌙","Cena siempre ligera"],["🥑","Aguacate moderado"],["🍚","Carbos (arroz/pasta) → 1 vez al día"]].map(([ic,tx])=>`<div style="display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);"><span style="font-size:15px">${ic}</span><span style="font-size:12px;color:var(--muted)">${tx}</span></div>`).join("")}
+  </div>`;
 
   // Porciones
   html+=`<div class="portions-card">
